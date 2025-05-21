@@ -8,9 +8,10 @@ GLSLStudio is a C++ application for viewing and rendering GLSL fragment shaders,
 - **4K Video Rendering**: Export shader animations as `.mp4` files at 3840x2160 resolution and 60 FPS.
 - **Shadertoy Workflow**: Convert Shadertoy shaders to the required format using AI tools like Grok or ChatGPT.
 - **ImGui Interface**: User-friendly controls for selecting shaders, adjusting render settings, and starting offline renders.
-- **Cross-Promotion**: Check out my related project, [Midimaker](https://github.com/nirblu/MIDIMaker) (demo link to be updated).
+- **Cross-Promotion**: Check out my related project, [Midimaker](https://github.com/nirblu/MIDIMaker)
 
 ## Workflow: Using Shadertoy Shaders
+make sure to check the license and credit the author 
 1. **Find a Shader**: Visit [Shadertoy](https://www.shadertoy.com/) and select a shader you like (e.g., copy the fragment shader code).
 2. **Translate the Shader**:
    - Paste the Shadertoy code into an AI tool like [Grok](https://grok.com/) or ChatGPT.
