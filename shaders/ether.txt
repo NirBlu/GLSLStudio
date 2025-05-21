@@ -1,0 +1,48 @@
+#version 330 core
+    precision highp float;
+    uniform float iTime;
+    uniform vec3 iResolution;
+
+    // Hue shift function that rotates a color about the gray (neutral) axis.
+    vec3 hueShift(vec3 color, float angle) {
+        const vec3 k = vec3(0.57735); // normalized (1,1,1)
+        float cosA = cos(angle);
+        float sinA = sin(angle);
+        return color * cosA + cross(k, color) * sinA + k * dot(k, color) * (1.0 - cosA);
+    }
+
+    #define m(a) mat2(cos(a+vec4(0,33,55,0)))
+    vec3 q, p;
+    float t, d = 2.5, r;
+
+    float M(vec3 p) {
+        t = iTime * 0.2;
+        p.xz *= m(t * 0.4);
+        p.xy *= m(t * 0.3);
+        q = p + p + t;
+        return length(p + sin(t * 0.7)) * log(length(p) + 1.) +
+               sin(q.x + sin(q.z + sin(q.y))) * 0.5 - 1.;
+    }
+
+    // Modified macro that takes two base color vectors (for the strokes)
+    #define mainImage(o, u, b1, b2)                              \
+        for (int i = 0; i++ < 8;) {                              \
+            p.xy = (u / iResolution.y - vec2(0.9, 0.5)) * d;    \
+            p.z = 5. - d;                                       \
+            o += smoothstep(2.5, 0., r = M(p)) * 0.7;            \
+            o *= vec4(b1, 0.0) + vec4(b2, 0.0) * clamp((r - M(p + 0.1)) * 0.5, -0.1, 1.); \
+            d += min(r, 1.);                                    \
+        }
+
+    void main() {
+        // Compute dynamic base colors by applying a slow hue shift.
+        vec3 dynBase1 = hueShift(vec3(0.15, 0.0, 0.2), iTime * 0.1);
+        vec3 dynBase2 = hueShift(vec3(4.3, 2.5, 4.0), iTime * 0.1);
+        vec4 fragColor = vec4(0.0);
+        mainImage(fragColor, gl_FragCoord.xy, dynBase1, dynBase2);
+
+        // Adjust brightness slightly by reducing overall brightness.
+        fragColor.rgb *= 0.8;
+
+        gl_FragColor = fragColor;
+    }
